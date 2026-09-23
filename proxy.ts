@@ -9,6 +9,9 @@ function guard(req: NextRequest) {
   const guarded =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/quiz") ||
+    pathname.startsWith("/lucent-english") ||
+    pathname.startsWith("/lucent-hindi") ||
+    pathname.startsWith("/interactive-learning") ||
     pathname === "/profile" ||
     pathname === "/pyqs" ||
     pathname === "/progress";
@@ -24,5 +27,5 @@ export default guard;
 export const middleware = guard;
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/quiz/:path*", "/profile", "/pyqs", "/progress"],
+  matcher: ["/dashboard/:path*", "/quiz/:path*", "/profile", "/pyqs", "/progress", "/lucent-english", "/lucent-hindi", "/interactive-learning"],
 };

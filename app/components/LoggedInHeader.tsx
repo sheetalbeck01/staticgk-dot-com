@@ -5,6 +5,9 @@ import Link from "next/link";
 
 const LINKS = [
   { key: "dashboard", href: "/dashboard", label: "Dashboard" },
+  { key: "lucent-english", href: "/lucent-english", label: "Lucent English" },
+  { key: "lucent-hindi", href: "/lucent-hindi", label: "Lucent Hindi" },
+  { key: "interactive-learning", href: "/interactive-learning", label: "Interactive Learning" },
   { key: "pyqs", href: "/pyqs", label: "Topicwise PYQs" },
   { key: "progress", href: "/progress", label: "Progress" },
 ];

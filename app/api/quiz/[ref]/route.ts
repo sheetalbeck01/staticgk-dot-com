@@ -4,6 +4,7 @@ import {
   findNode as findStaticNode,
   nextTopic as nextStaticTopic,
 } from "@/app/data/syllabus";
+import { findNodeHi } from "@/app/data/syllabus-hi";
 import { QUESTION_BANK } from "@/app/data/questions";
 import type { Quiz } from "@/domain/entities";
 
@@ -41,6 +42,17 @@ export async function GET(
 
   const fallback = staticQuiz(key);
   if (!fallback) {
+    // Known Hindi ref without a question bank yet → coming-soon card
+    const hi = findNodeHi(key);
+    if (hi) {
+      return NextResponse.json(
+        {
+          error: `Questions for ${key.toUpperCase()} are being added`,
+          ref: key.toUpperCase(),
+        },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(
       { error: `No quiz found for "${key}"` },
       { status: 404 }

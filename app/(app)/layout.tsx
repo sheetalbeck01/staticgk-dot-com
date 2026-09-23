@@ -6,6 +6,9 @@ import LoggedInHeader from "../components/LoggedInHeader";
 
 function activeFor(pathname: string): string {
   if (pathname.startsWith("/quiz")) return "quiz";
+  if (pathname.startsWith("/lucent-english")) return "lucent-english";
+  if (pathname.startsWith("/lucent-hindi")) return "lucent-hindi";
+  if (pathname.startsWith("/interactive-learning")) return "interactive-learning";
   if (pathname.startsWith("/pyqs")) return "pyqs";
   if (pathname.startsWith("/progress")) return "progress";
   if (pathname.startsWith("/profile")) return "profile";
