@@ -7,6 +7,8 @@ import {
 import { QUESTION_BANK } from "@/app/data/questions";
 import type { Quiz } from "@/domain/entities";
 
+export const runtime = "nodejs";
+
 // GET /api/quiz/GK-014 — quiz payload from the database.
 // Falls back to the static bank when the DB is empty/unreachable,
 // so the UI keeps working before migration + seed.

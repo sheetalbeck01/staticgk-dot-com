@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { quizService } from "@/lib/container";
 import { attemptSchema } from "@/lib/validations";
 
+export const runtime = "nodejs";
+
 // POST /api/attempts — persist a finished quiz (requires sign-in).
 export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
