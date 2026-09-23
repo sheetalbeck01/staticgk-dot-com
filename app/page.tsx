@@ -136,7 +136,8 @@ export default function Home() {
             ) : (
               <button
                 onClick={googleSignIn}
-                className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 sm:px-5"
+                type="button"
+                className="flex touch-manipulation cursor-pointer items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 sm:px-5"
               >
                 <span className="font-bold">G</span>
                 <span className="hidden sm:inline">Sign in with Google</span>
@@ -219,6 +220,19 @@ export default function Home() {
                 </button>
               ))}
             </div>
+
+            {!session && !isPending && (
+              <button
+                onClick={googleSignIn}
+                type="button"
+                className="mt-4 flex w-full touch-manipulation cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-bold text-slate-900 shadow-sm transition hover:border-brand-500 hover:bg-brand-50 active:scale-[0.99]"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
+                  G
+                </span>
+                Continue with Google — save progress &amp; sync devices
+              </button>
+            )}
           </div>
 
           {/* Right — topic card visual */}
