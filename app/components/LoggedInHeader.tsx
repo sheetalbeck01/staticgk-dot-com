@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "@/lib/auth/client";
+import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
 
 const LINKS = [

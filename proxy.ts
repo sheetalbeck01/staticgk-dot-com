@@ -1,13 +1,28 @@
-import { auth } from '@/lib/auth/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-// Next 16: proxy.ts replaces middleware.ts (same auth logic).
-// Unauthenticated visitors are redirected to the sign-in page.
-// Unauthenticated visitors go to the landing page,
-// which has the Google sign-in button in the navbar.
-export default auth.middleware({
-  loginUrl: '/',
-});
+// Edge-safe guard: checks session-cookie presence only (no DB imports).
+// API routes re-verify the session server-side.
+function guard(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  const guarded =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/quiz") ||
+    pathname === "/profile" ||
+    pathname === "/pyqs" ||
+    pathname === "/progress";
+  if (!guarded) return NextResponse.next();
+
+  if (getSessionCookie(req)) return NextResponse.next();
+
+  return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+}
+
+// Next 16 proxy convention (default export) + legacy middleware export.
+export default guard;
+export const middleware = guard;
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/quiz/:path*', '/profile', '/pyqs', '/progress'],
+  matcher: ["/dashboard/:path*", "/quiz/:path*", "/profile", "/pyqs", "/progress"],
 };

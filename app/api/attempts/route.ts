@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { auth } from "@/lib/auth/server";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { quizService } from "@/lib/container";
 import { attemptSchema } from "@/lib/validations";
 
 // POST /api/attempts — persist a finished quiz (requires sign-in).
 export async function POST(req: Request) {
-  const { data: session } = await auth.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   const userId = session?.user?.id;
   if (!userId) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });

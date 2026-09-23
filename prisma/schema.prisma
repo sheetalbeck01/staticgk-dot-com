@@ -12,9 +12,65 @@ datasource db {
   provider = "postgresql"
 }
 
-// ---------- Better Auth (managed by Neon Auth — tables live in Neon's
-// managed auth schema, NOT here. Do not redefine user/session/account
-// tables or migrate will clash with the managed ones.) ----------
+// ---------- Better Auth (self-hosted; tables managed by our migrations) ----------
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  attempts      QuizAttempt[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}
 
 // ---------- StaticGK catalog (Lucent's GK syllabus) ----------
 model Chapter {
@@ -66,10 +122,11 @@ model Question {
   @@index([topicId, sort])
 }
 
-// ---------- Progress (userId = Better Auth user id, managed by Neon Auth) ----------
+// ---------- Progress (userId = Better Auth user id) ----------
 model QuizAttempt {
   id        String   @id @default(cuid())
   userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   scopeKind String // chapter | topic | subtopic
   scopeRef  String // e.g. GK-014
   total     Int

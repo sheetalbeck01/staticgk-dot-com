@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { authClient, useSession } from "@/lib/auth/client";
+import { authClient, useSession } from "@/lib/auth-client";
 import Link from "next/link";
 
 export default function ProfilePage() {

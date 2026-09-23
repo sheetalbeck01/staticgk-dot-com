@@ -1,5 +1,4 @@
-import { auth } from '@/lib/auth/server';
+import { auth } from "@/lib/auth";
+import { toNextJsHandler } from "better-auth/next-js";
 
-// Proxies Managed Better Auth APIs from our own origin
-// (same-origin requests => first-party session cookies).
-export const { GET, POST } = auth.handler();
+export const { GET, POST } = toNextJsHandler(auth);

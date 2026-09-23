@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authClient, useSession } from "@/lib/auth/client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { findTopic } from "./data/syllabus";
 import Link from "next/link";
 

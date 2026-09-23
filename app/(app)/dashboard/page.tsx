@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSession } from "@/lib/auth/client";
+import { useSession } from "@/lib/auth-client";
 
 import { SYLLABUS, type Chapter, type Topic } from "../../data/syllabus";
 import { getRevisionQueue } from "@/lib/revision";

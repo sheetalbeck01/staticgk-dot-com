@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Google_Sans_Flex } from "next/font/google";
 import { Orbitron } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "./auth-provider";
 import QueryProvider from "./query-provider";
 
 const googleSansFlex = Google_Sans_Flex({
@@ -30,9 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${googleSansFlex.variable} ${orbitron.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </AuthProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
