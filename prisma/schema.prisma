@@ -1,0 +1,81 @@
+// Prisma schema — PostgreSQL
+// Auth.js models (User/Account/Session/VerificationToken) + StaticGK catalog & attempts.
+// After adding your DATABASE_URL to .env, run:
+//   npx prisma migrate dev --name init
+//   npm run db:seed
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Better Auth (managed by Neon Auth — tables live in Neon's
+// managed auth schema, NOT here. Do not redefine user/session/account
+// tables or migrate will clash with the managed ones.) ----------
+
+// ---------- StaticGK catalog (Lucent's GK syllabus) ----------
+model Chapter {
+  id     String  @id @default(cuid())
+  ref    String  @unique // e.g. CH-01
+  title  String
+  sort   Int     @default(0)
+  topics Topic[]
+
+  @@index([sort])
+}
+
+model Topic {
+  id        String     @id @default(cuid())
+  ref       String     @unique // e.g. GK-014
+  title     String
+  questions Int        @default(0)
+  sort      Int        @default(0)
+  chapterId String
+  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  subtopics Subtopic[]
+  bank      Question[]
+
+  @@index([chapterId, sort])
+}
+
+model Subtopic {
+  id        String @id @default(cuid())
+  ref       String @unique // e.g. GK-014.1
+  title     String
+  questions Int    @default(0)
+  sort      Int    @default(0)
+  topicId   String
+  topic     Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([topicId, sort])
+}
+
+model Question {
+  id          String @id @default(cuid())
+  topicId     String
+  topic       Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  text        String
+  options     String[]
+  answer      Int
+  explanation String @default("")
+  sort        Int    @default(0)
+
+  @@index([topicId, sort])
+}
+
+// ---------- Progress (userId = Better Auth user id, managed by Neon Auth) ----------
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  scopeKind String // chapter | topic | subtopic
+  scopeRef  String // e.g. GK-014
+  total     Int
+  correct   Int
+  createdAt DateTime @default(now())
+
+  @@index([userId, scopeRef])
+  @@index([userId, createdAt])
+}
