@@ -29,6 +29,7 @@ const STEPS = [
 export default function Home() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
+  const [signInError, setSignInError] = useState("");
   const router = useRouter();
   const { data: session, isPending } = useSession();
 
@@ -37,11 +38,21 @@ export default function Home() {
     if (!isPending && session) router.replace("/dashboard");
   }, [isPending, session, router]);
 
-  function googleSignIn() {
-    authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    });
+  async function googleSignIn() {
+    setSignInError("");
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+      if (error) {
+        setSignInError("Google sign-in failed. Please try again.");
+        setTimeout(() => setSignInError(""), 5000);
+      }
+    } catch {
+      setSignInError("Google sign-in failed. Please try again.");
+      setTimeout(() => setSignInError(""), 5000);
+    }
   }
 
   function goToQuiz(q: string) {
@@ -147,6 +158,12 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {signInError && (
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold whitespace-nowrap text-white shadow-lg">
+          {signInError}
+        </div>
+      )}
 
       {/* Section 1 — Hero + instant search */}
       <section id="start" className="relative overflow-hidden">
